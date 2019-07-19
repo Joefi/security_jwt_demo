@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.demo.dao.UserDao">
+    <resultMap id="userMap" type="com.example.demo.entity.AppUser">
+        <id property="id" column="id" />
+        <result property="username" column="username" />
+        <result property="password" column="password" />
+        <collection property="roles" ofType="com.example.demo.entity.AppRole">
+            <id column="roleid" property="id"/>
+            <result column="rolename" property="name" />
+        </collection>
+    </resultMap>
+
+    <select id="findUserByName" parameterType="String" resultMap="userMap" >
+        select u.id, u.username, u.password, r.id as roleid, r.name as rolename from sys_user u
+        left join sys_role_user sru on u.id = sru.sys_user_id
+        left join role r on sru.sys_role_id = r.id
+        where username = #{username}
+    </select>
+</mapper>
